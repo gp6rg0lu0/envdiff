@@ -49,6 +49,20 @@ func TestRenderText_ShowsDifferences(t *testing.T) {
 	}
 }
 
+func TestRenderText_ContainsKeyNames(t *testing.T) {
+	var buf bytes.Buffer
+	err := report.Render(&buf, makeResult(), "base.env", "compare.env", report.Options{Format: report.FormatText, NoColor: true})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	out := buf.String()
+	for _, key := range []string{"DB_HOST", "NEW_KEY", "APP_ENV"} {
+		if !strings.Contains(out, key) {
+			t.Errorf("expected key %q in output, got: %s", key, out)
+		}
+	}
+}
+
 func TestRenderJSON_Structure(t *testing.T) {
 	var buf bytes.Buffer
 	err := report.Render(&buf, makeResult(), "base.env", "compare.env", report.Options{Format: report.FormatJSON})
