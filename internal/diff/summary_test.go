@@ -75,3 +75,27 @@ func TestSummary_String_WithDiff(t *testing.T) {
 		t.Errorf("expected mismatched count in string, got: %q", str)
 	}
 }
+
+func TestSummarize_OnlyMissing(t *testing.T) {
+	r := Result{
+		Missing: []string{"X"},
+		Extra:   []string{},
+		Mismatched: []MismatchedEntry{},
+	}
+	s := Summarize(r)
+	if s.MissingCount != 1 {
+		t.Errorf("expected MissingCount 1, got %d", s.MissingCount)
+	}
+	if s.ExtraCount != 0 {
+		t.Errorf("expected ExtraCount 0, got %d", s.ExtraCount)
+	}
+	if s.MismatchedCount != 0 {
+		t.Errorf("expected MismatchedCount 0, got %d", s.MismatchedCount)
+	}
+	if s.TotalCount != 1 {
+		t.Errorf("expected TotalCount 1, got %d", s.TotalCount)
+	}
+	if !s.HasDifferences() {
+		t.Error("expected HasDifferences to be true")
+	}
+}
