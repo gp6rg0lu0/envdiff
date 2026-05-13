@@ -36,3 +36,15 @@ func (s Summary) String() string {
 func (s Summary) HasDifferences() bool {
 	return s.TotalCount > 0
 }
+
+// Add combines two Summaries by summing their individual counts.
+// This is useful when aggregating results across multiple diff operations.
+func (s Summary) Add(other Summary) Summary {
+	result := Summary{
+		MissingCount:    s.MissingCount + other.MissingCount,
+		ExtraCount:      s.ExtraCount + other.ExtraCount,
+		MismatchedCount: s.MismatchedCount + other.MismatchedCount,
+	}
+	result.TotalCount = result.MissingCount + result.ExtraCount + result.MismatchedCount
+	return result
+}
