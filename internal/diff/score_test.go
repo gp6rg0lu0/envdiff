@@ -70,6 +70,22 @@ func TestScoreEnvs_MixedDifferences(t *testing.T) {
 	}
 }
 
+func TestScoreEnvs_AllExtra(t *testing.T) {
+	base := parser.Env{}
+	target := parser.Env{"X": "1", "Y": "2"}
+
+	s := ScoreEnvs(base, target)
+	if s.Extra != 2 {
+		t.Errorf("expected 2 extra, got %d", s.Extra)
+	}
+	if s.Matched != 0 {
+		t.Errorf("expected 0 matched, got %d", s.Matched)
+	}
+	if s.Percent != 0.0 {
+		t.Errorf("expected 0%%, got %.1f%%", s.Percent)
+	}
+}
+
 func TestScore_String(t *testing.T) {
 	s := Score{
 		Total: 4, Matched: 2, Missing: 1, Extra: 0, Mismatched: 1, Percent: 50.0,
